@@ -1,5 +1,7 @@
 package com.wildcodeschool.pokeapi2.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 
 @Entity
@@ -10,9 +12,10 @@ public class Pokemon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
+    @JsonProperty("health_point")
     private int hp;
 
     public Pokemon() {

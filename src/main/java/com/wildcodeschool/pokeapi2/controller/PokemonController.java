@@ -3,24 +3,48 @@ package com.wildcodeschool.pokeapi2.controller;
 import com.wildcodeschool.pokeapi2.entity.Pokemon;
 import com.wildcodeschool.pokeapi2.repository.PokemonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/pokemons")
 public class PokemonController {
 
     @Autowired
     private PokemonRepository pokemonRepository;
 
-    @GetMapping("/create/pokemon")
-    @ResponseBody
-    public Pokemon createPokemon() {
+    @GetMapping("/")
+    public List<Pokemon> getAll() {
 
-        Pokemon test = new Pokemon();
-        test.setName("Testomon");
-        test.setHp(42);
+        return pokemonRepository.findAll();
+    }
 
-        return pokemonRepository.save(test);
+    @GetMapping("/{id}")
+    public Optional<Pokemon> getOne(@PathVariable Long id) {
+
+        return pokemonRepository.findById(id);
+    }
+
+    @PostMapping("/")
+    public Pokemon postOne(@RequestBody Pokemon pokemon) {
+
+        return pokemonRepository.save(pokemon);
+    }
+
+    @PutMapping("/")
+    public Pokemon updateOne(@RequestBody Pokemon pokemon) {
+
+        if (pokemonRepository.existsById(pokemon.getId())) {
+            return pokemonRepository.save(pokemon);
+        }
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteOne(@PathVariable Long id) {
+
+        pokemonRepository.deleteById(id);
     }
 }
